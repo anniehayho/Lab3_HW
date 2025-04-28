@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const SearchBar = ({ onSearch, onFilterByAiTag }) => {
@@ -25,7 +25,9 @@ const SearchBar = ({ onSearch, onFilterByAiTag }) => {
           onSubmitEditing={handleSearch}
         />
         <TouchableOpacity onPress={handleSearch} style={styles.iconButton}>
-          <Icon name="search" size={24} color="#007AFF" />
+          <View style={{backgroundColor: 'lightblue', padding: 5, borderRadius: 5}}>
+            <Text style={{color: 'white', fontSize: 10, fontWeight: 'bold'}}>Search</Text>
+          </View>
         </TouchableOpacity>
       </View>
       
@@ -38,7 +40,9 @@ const SearchBar = ({ onSearch, onFilterByAiTag }) => {
           onSubmitEditing={handleAiFilter}
         />
         <TouchableOpacity onPress={handleAiFilter} style={styles.iconButton}>
-          <Icon name="filter" size={24} color="#007AFF" />
+          <View style={{backgroundColor: 'lightblue', padding: 5, borderRadius: 5}}>
+            <Text style={{color: 'white', fontSize: 10, fontWeight: 'bold'}}>Filter</Text>
+          </View>
         </TouchableOpacity>
       </View>
     </View>
