@@ -18,23 +18,19 @@ const loadModel = async () => {
 
 export const analyzeImage = async (imageUrl) => {
   try {
-    // Check if we have cached results
     const cachedResult = await getCachedAnalysis(imageUrl);
     if (cachedResult) {
       return cachedResult;
     }
     
-    // Load the model if not loaded
     const detector = await loadModel();
     
-    // Process the image using Expo's ImageManipulator
     const manipResult = await ImageManipulator.manipulateAsync(
       imageUrl,
       [{ resize: { width: 300 } }],
       { format: 'jpeg' }
     );
     
-    // Get image dimensions
     const getImageSize = () => {
       return new Promise((resolve, reject) => {
         Image.getSize(manipResult.uri, 
@@ -46,13 +42,11 @@ export const analyzeImage = async (imageUrl) => {
     
     const { width, height } = await getImageSize();
     
-    // Convert image to tensor
     const imgB64 = await RNFS.readFile(manipResult.uri.replace('file://', ''), 'base64');
     const imgBuffer = tf.util.encodeString(imgB64, 'base64').buffer;
     const raw = new Uint8Array(imgBuffer);
     const imageTensor = tf.image.decodeJpeg(raw);
     
-    // Detect objects
     const predictions = await detector.detect(imageTensor);
     
     // Extract the labels (first 3)

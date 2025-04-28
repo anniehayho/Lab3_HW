@@ -11,43 +11,42 @@ export const useImagePagination = (initialQuery = '') => {
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const loadImages = useCallback(async (pageToLoad = 1, searchQuery = query) => {
-    if (loading) return;
+// hooks/useImagePagination.js - simplified approach
+const loadImages = useCallback(async (pageToLoad = 1, searchQuery = query) => {
+  if (loading) return;
+  
+  setLoading(true);
+  setError(null);
+  
+  try {
+    const response = await fetchImages(pageToLoad, 20, searchQuery);
     
-    setLoading(true);
-    setError(null);
+    // Use Pixabay's built-in tags instead of AI detection
+    const processedImages = response.hits.map(image => {
+      const aiTags = image.tags.split(',').map(tag => tag.trim());
+      return { ...image, aiTags };
+    });
     
-    try {
-      const response = await fetchImages(pageToLoad, 20, searchQuery);
-      
-      // Process each image with AI
-      const processedImages = await Promise.all(
-        response.hits.map(async (image) => {
-          const aiTags = await analyzeImage(image.webformatURL);
-          return { ...image, aiTags };
-        })
-      );
-      
-      if (pageToLoad === 1) {
-        setImages(processedImages);
-      } else {
-        setImages(prev => [...prev, ...processedImages]);
-      }
-      
-      setHasMore(response.hits.length > 0);
-      setPage(pageToLoad);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
+    if (pageToLoad === 1) {
+      setImages(processedImages);
+    } else {
+      setImages(prev => [...prev, ...processedImages]);
     }
-  }, [query, loading]);
+    
+    setHasMore(response.hits.length > 0);
+    setPage(pageToLoad);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+    setRefreshing(false);
+  }
+}, [query, loading]);
 
   // Initial load
   useEffect(() => {
     loadImages(1, query);
-  }, [query, loadImages]);
+  }, []);
 
   // Load more images
   const loadMore = useCallback(() => {

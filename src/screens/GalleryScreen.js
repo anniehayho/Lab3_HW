@@ -78,7 +78,7 @@ const GalleryScreen = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-              <Icon name="close" size={24} color="#fff" />
+              <Text style={{color: 'white', fontSize: 10, fontWeight: 'bold'}}>Close</Text>
             </TouchableOpacity>
             
             {selectedImage && (
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 10,
+    top: 20,
     right: 10,
     zIndex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
